@@ -1,0 +1,12 @@
+module top_module( 
+    input [7:0] in,
+    output [7:0] out
+);
+    generate
+        genvar index;
+        for (index = 0; index < 8; ++index)begin:conv
+            assign out[index] = in[7-index];
+        end
+    endgenerate
+
+endmodule
