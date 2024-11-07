@@ -1,0 +1,39 @@
+module top_module(
+    input [399:0] a, b,
+    input cin,
+    output cout,
+    output [399:0] sum
+);
+    
+    // Create 100 BCD adders
+    wire [99:0] carry;
+    
+    genvar i;
+    generate
+        for (i = 0; i < 100; i = i + 1) begin : bcd_adder_array
+            if (i == 0) begin
+                // Instantiate the first BCD adder with carry-in as input
+                bcd_fadd bcd_fa (
+                    .a(a[3:0]),
+                    .b(b[3:0]),
+                    .cin(cin),
+                    .cout(carry[i]),
+                    .sum(sum[3:0])
+                );
+            end else begin
+                // Instantiate subsequent BCD adders with carry-out from previous stage as carry-in
+                bcd_fadd bcd_fa (
+                    .a(a[4*i+3:4*i]),
+                    .b(b[4*i+3:4*i]),
+                    .cin(carry[i-1]),
+                    .cout(carry[i]),
+                    .sum(sum[4*i+3:4*i])
+                );
+            end
+        end
+    endgenerate
+    
+    // Assign the final carry-out
+    assign cout = carry[99];
+
+endmodule
