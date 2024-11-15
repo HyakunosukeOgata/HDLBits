@@ -1,0 +1,32 @@
+module top_module( 
+    input a, b, cin,
+    output cout, sum 
+);
+    wire line1, line2, line3;
+    
+    HADD ins1_HADD(
+        .a(a),
+        .b(b),
+        .cout(line1), 
+        .sum(line2)
+    );
+    
+    HADD ins2_HADD(
+        .a(line2), 
+        .b(cin), 
+        .cout(line3),  
+        .sum(sum)
+    );
+
+    assign cout = line1 | line3;
+    
+endmodule
+
+
+module HADD( 
+    input a, b,
+    output cout, sum 
+);
+    assign sum = a ^ b;
+    assign cout = a & b;
+endmodule
